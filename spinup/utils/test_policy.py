@@ -4,7 +4,8 @@ import os
 import os.path as osp
 import tensorflow as tf
 import torch
-from spinup import EpochLogger
+import numpy as np
+from spinup.utils.logx import EpochLogger
 from spinup.utils.logx import restore_tf_graph
 
 
@@ -107,14 +108,15 @@ def load_pytorch_policy(fpath, itr, deterministic=False):
     return get_action
 
 
-def run_policy(env, get_action, max_ep_len=None, num_episodes=100, render=True):
+def run_policy(fpath, env, get_action, max_ep_len=None, num_episodes=100, render=True):
 
     assert env is not None, \
         "Environment not found!\n\n It looks like the environment wasn't saved, " + \
         "and we can't run the agent in it. :( \n\n Check out the readthedocs " + \
         "page on Experiment Outputs for how to handle this situation."
 
-    logger = EpochLogger()
+    test_path = osp.join(fpath, 'test')
+    logger = EpochLogger(output_dir=osp.join(test_path, time.strftime("%Y-%m-%d_%H-%M-%S")))
     o, r, d, ep_ret, ep_len, n = env.reset(), 0, False, 0, 0, 0
     while n < num_episodes:
         if render:
@@ -127,14 +129,15 @@ def run_policy(env, get_action, max_ep_len=None, num_episodes=100, render=True):
         ep_len += 1
 
         if d or (ep_len == max_ep_len):
-            logger.store(EpRet=ep_ret, EpLen=ep_len)
+            logger.store(Epoch=n, EpRet=ep_ret, EpLen=ep_len)
             print('Episode %d \t EpRet %.3f \t EpLen %d'%(n, ep_ret, ep_len))
             o, r, d, ep_ret, ep_len = env.reset(), 0, False, 0, 0
             n += 1
 
-    logger.log_tabular('EpRet', with_min_and_max=True)
-    logger.log_tabular('EpLen', average_only=True)
-    logger.dump_tabular()
+            logger.log_tabular('Epoch', n)
+            logger.log_tabular('EpRet', with_min_and_max=True)
+            logger.log_tabular('EpLen', average_only=True)
+            logger.dump_tabular()
 
 
 if __name__ == '__main__':
@@ -150,4 +153,4 @@ if __name__ == '__main__':
     env, get_action = load_policy_and_env(args.fpath, 
                                           args.itr if args.itr >=0 else 'last',
                                           args.deterministic)
-    run_policy(env, get_action, args.len, args.episodes, not(args.norender))
+    run_policy(args.fpath, env, get_action, args.len, args.episodes, not(args.norender))

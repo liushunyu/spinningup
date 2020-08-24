@@ -13,6 +13,7 @@ import tensorflow as tf
 import torch
 import os.path as osp, time, atexit, os
 import warnings
+from torch.utils.tensorboard import SummaryWriter
 from spinup.utils.mpi_tools import proc_id, mpi_statistics_scalar
 from spinup.utils.serialization_utils import convert_json
 
@@ -111,6 +112,7 @@ class Logger:
         self.log_headers = []
         self.log_current_row = {}
         self.exp_name = exp_name
+        self.writer = SummaryWriter(log_dir=self.output_dir)
 
     def log(self, msg, color='green'):
         """Print a colorized message to stdout."""
@@ -290,6 +292,7 @@ class Logger:
                 val = self.log_current_row.get(key, "")
                 valstr = "%8.3g"%val if hasattr(val, "__float__") else val
                 print(fmt%(key, valstr))
+                self.writer.add_scalar(key, val, global_step=self.log_current_row.get('Epoch', ""))
                 vals.append(val)
             print("-"*n_slashes, flush=True)
             if self.output_file is not None:
