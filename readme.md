@@ -4,10 +4,11 @@
 
 # Stable Spinning Up
 
-为什么会有 Stable Spinning Up ？
+Why is Stable Spinning Up?
 
--  OpenAI 的强化学习教程项目 [Spinning Up](https://github.com/openai/spinningup) 写的简洁明了，其中具备基于 PyTorch 的算法实现，并且代码逻辑之间没有太多的嵌套关系，可以对具体的某个算法进行快速的了解学习，基本的日志记录及画图功能也比较完善，对于科研学习的需求都可以基本满足。
-- 主要受到 [Baselines](https://github.com/openai/baselines) 项目及其拓展版 [Stable Baselines](https://github.com/hill-a/stable-baselines) 项目和 [Stable Baselines3](https://github.com/DLR-RM/stable-baselines3) 项目的启发，希望自己能对 Spinning Up 项目继续维护和完善，依照其代码风格对其进行拓展，所以取名 Stable Spinning Up。
+- OpenAI's reinforcement learning tutorial [Spinning Up](https://github.com/openai/spinningup) is concisely written, which algorithm implementations are based on  both PyTorch and Tensorflow. There is not too much nested relationship between the code logic, and we can quickly learn about a specific algorithm. Basic logging and plotting functions are also complete, and all needs for research and learning can be largely met.
+- It is mainly Inspired by the [Baselines](https://github.com/openai/baselines) project and its extended version [Stable Baselines](https://github.com/hill-a/stable-baselines) project and [Stable Baselines3](https://github.com/DLR-RM/stable-baselines3) project, I want to maintain and improve the [Spinning Up](https://github.com/openai/spinningup) project, and extend it according to its code style. So I named it [Stable Spinning Up](https://github.com/liushunyu/stable-spinningup).
+- In the future, I will extend some useful tools and PyTorch-based algorithms for [Stable Spinning Up](https://github.com/liushunyu/stable-spinningup).
 
 
 
