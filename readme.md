@@ -84,6 +84,7 @@ pip install -e .
 
 ### What's new
 
+- 2020-08-26: Add simple MLP DQN implementation.
 - 2020-08-24: Add tensorboard implementation for training and testing.
 
 
