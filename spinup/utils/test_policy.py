@@ -116,10 +116,7 @@ def run_policy(fpath, env, get_action, max_ep_len=None, num_episodes=100, render
         "page on Experiment Outputs for how to handle this situation."
 
     test_path = osp.join(fpath, 'test')
-    output_dir = osp.join(test_path, time.strftime("%Y-%m-%d_%H-%M-%S"))
-    logger_result = EpochLogger(output_dir=output_dir, output_fname='result.txt', use_tensorboard=False)
-    logger_progress = EpochLogger(output_dir=output_dir, output_fname='progress.txt', use_tensorboard=True)
-
+    logger = EpochLogger(output_dir=osp.join(test_path, time.strftime("%Y-%m-%d_%H-%M-%S")))
     o, r, d, ep_ret, ep_len, n = env.reset(), 0, False, 0, 0, 0
     while n < num_episodes:
         if render:
@@ -132,20 +129,15 @@ def run_policy(fpath, env, get_action, max_ep_len=None, num_episodes=100, render
         ep_len += 1
 
         if d or (ep_len == max_ep_len):
-            logger_result.store(EpRet=ep_ret, EpLen=ep_len)
-
-            logger_progress.log_tabular('Epoch', n)
-            logger_progress.log_tabular('EpRet', ep_ret)
-            logger_progress.log_tabular('EpLen', ep_len)
-            logger_progress.dump_tabular()
-
+            logger.store(Epoch=n, EpRet=ep_ret, EpLen=ep_len)
+            print('Episode %d \t EpRet %.3f \t EpLen %d'%(n, ep_ret, ep_len))
             o, r, d, ep_ret, ep_len = env.reset(), 0, False, 0, 0
             n += 1
 
-    logger_result.log_tabular('Epochs', n)
-    logger_result.log_tabular('EpRet', with_min_and_max=True)
-    logger_result.log_tabular('EpLen', average_only=True)
-    logger_result.dump_tabular()
+            logger.log_tabular('Epoch', n)
+            logger.log_tabular('EpRet', with_min_and_max=True)
+            logger.log_tabular('EpLen', average_only=True)
+            logger.dump_tabular()
 
 
 if __name__ == '__main__':

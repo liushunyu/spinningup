@@ -77,7 +77,7 @@ class Logger:
     state of a training run, and the trained model.
     """
 
-    def __init__(self, output_dir=None, output_fname='progress.txt', exp_name=None, use_tensorboard=True):
+    def __init__(self, output_dir=None, output_fname='progress.txt', exp_name=None):
         """
         Initialize a Logger.
 
@@ -112,9 +112,7 @@ class Logger:
         self.log_headers = []
         self.log_current_row = {}
         self.exp_name = exp_name
-        self.use_tensorboard = use_tensorboard
-        if self.use_tensorboard:
-            self.writer = SummaryWriter(log_dir=self.output_dir)
+        self.writer = SummaryWriter(log_dir=self.output_dir)
 
     def log(self, msg, color='green'):
         """Print a colorized message to stdout."""
@@ -294,8 +292,7 @@ class Logger:
                 val = self.log_current_row.get(key, "")
                 valstr = "%8.3g"%val if hasattr(val, "__float__") else val
                 print(fmt%(key, valstr))
-                if self.use_tensorboard:
-                    self.writer.add_scalar(key, val, global_step=self.log_current_row.get('Epoch', ""))
+                self.writer.add_scalar(key, val, global_step=self.log_current_row.get('Epoch', ""))
                 vals.append(val)
             print("-"*n_slashes, flush=True)
             if self.output_file is not None:
